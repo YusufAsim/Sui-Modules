@@ -1,5 +1,6 @@
 module module_2::hero {
     use std::string::String;
+    use sui::transfer::public_transfer;
     
      public struct Hero has key, store {
         // TODO: Add the fields for the Hero
@@ -7,16 +8,31 @@ module module_2::hero {
         // 2. The name of the Hero
         // 3. The imageurl of the Hero
         // 4. The power of the Hero
+        id : UID,
+        name : String,
+        image_url: String,
+        power: u64,
     }
 
     #[allow(lint(self_transfer))]
     public entry fun create_hero(name: String, image_url: String, power: u64,  ctx: &mut TxContext) {
         // TODO: Create the Hero object
         // TODO: Transfer the Hero object to the sender
+
+        let hero = Hero {
+            id: object::new(ctx),
+            name,            
+            image_url,         
+            power,            
+        };
+
+        transfer::transfer(hero, ctx.sender());   
+
     }
 
     public entry fun transfer_hero(hero: Hero, to: address) {
         // TODO: Transfer the Hero object to the recipient
+        transfer::public_transfer(hero, to);
     }
     
     // ========= GETTER FUNCTIONS =========
